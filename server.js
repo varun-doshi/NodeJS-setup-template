@@ -7,11 +7,11 @@ require("dotenv").config();
 
 app.use(express.json());
 
-app.get("/", async (req, res) => {
+app.get("/suchita", async (req, res) => {
   console.log("here");
   res.send("alive");
 });
-
+//READ
 app.get("/find", async (req, res) => {
   const doc = await User.find();
   if (doc) {
@@ -30,7 +30,7 @@ app.get("/search/:id", async (req, res) => {
     res.send("not available");
   }
 });
-
+//WRITE
 app.post("/register", async (req, res) => {
   console.log(req.body);
   const { username, password } = req.body;
@@ -46,7 +46,25 @@ app.post("/register", async (req, res) => {
   }
 });
 
+//DELETE
+app.delete("/delete", async (req, res) => {
+  console.log(req.body);
+  const { username } = req.body;
+  try {
+    const userDoc = await User.deleteOne({
+      username: username,
+    });
+    res.json(userDoc);
+  } catch (e) {
+    console.log(e);
+    res.status(400).json(e);
+  }
+});
+
 app.listen(port, () => {
   mongoose.connect(process.env.MONGO_URI);
   console.log(`Listening on http://localhost:${port}`);
 });
+
+// 127:0:0:1=>localhost
+// http://127:0:0:1:3000
